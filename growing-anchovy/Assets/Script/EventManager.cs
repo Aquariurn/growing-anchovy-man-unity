@@ -1,21 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EventManager : MonoBehaviour
 {
-    public GameObject player;
+    public GameObject playerObject;
     
     public GameObject shopWindow;
     public GameObject workoutWindow;
 
     private PlayerManager playerManager;
     private TextManager textManager;
+
+    public Button[] equipmentButtons;
+
+    private Player player;
     // Start is called before the first frame update
     void Start()
     {
-        playerManager = player.GetComponent<PlayerManager>();
-        textManager = player.GetComponent<TextManager>();
+        playerManager = playerObject.GetComponent<PlayerManager>();
+        textManager = playerObject.GetComponent<TextManager>();
+        for (int i = 0; i < equipmentButtons.Length; i++)
+        {
+            int index = i; // 클로저를 위해 로컬 변수로 복사
+            equipmentButtons[i].onClick.AddListener(() => OnEquipmentButtonClick(index));
+            Debug.Log(index + "번 째 장비 버튼 추가");
+        }
+        Debug.Log("equipmentButtons 길이: " + equipmentButtons.Length);
     }
 
     // Update is called once per frame
@@ -24,9 +36,21 @@ public class EventManager : MonoBehaviour
         
     }
 
+    public void OnEquipmentButtonClick(int index) {
+        player = playerManager.player;
+        if(player != null) {
+            Debug.Log(index + "번 째 장비 업그레이드");
+            player.SetEquipmentItem(index, player.GetEquipmentItem(index) + 1);
+            textManager.SetEquipmentSprite(index, player.GetEquipmentItem(index));
+        } else {
+            Debug.LogError("player 객체가 null입니다.");
+        }
+    }
+
     public void OnClickGold() {
-        playerManager.player.SetGold(playerManager.player.GetGold() + 10);
-        textManager.SetGoldText(playerManager.player.GetGold());
+        player = playerManager.player;
+        player.SetGold(player.GetGold() + 10);
+        textManager.SetGoldText(player.GetGold());
     }
 
     public void OnClickShop() {
@@ -43,7 +67,7 @@ public class EventManager : MonoBehaviour
     }
 
     public void OnClickExp() {
-        Player player = playerManager.player;
+        player = playerManager.player;
         player.SetExp(player.GetExp() + 10);
         if(player.GetExp() + 10 >= player.GetMaxExp()) {
             player.SetMaxExp(player.GetMaxExp() * 2);
@@ -52,4 +76,6 @@ public class EventManager : MonoBehaviour
         playerManager.UpdateHp();
         textManager.SetExpText(player.GetExp(), player.GetMaxExp());
     }
+
+    
 }

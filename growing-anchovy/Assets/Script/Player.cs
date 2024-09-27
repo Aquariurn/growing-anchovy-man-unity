@@ -12,16 +12,19 @@ public class Player
     private int exp;
     private int maxExp;
 
-    public Player() {
+    private int[] equipments;
 
+    public Player() {
+        equipments = new int[4];
     }
 
-    public Player(int _gold, int _level, string _grade, int _exp, int _maxExp) {
+    public Player(int _gold, int _level, string _grade, int _exp, int _maxExp, int[] _equipments) {
         this.gold = _gold;
         this.level = _level;
         this.grade = _grade;
         this.exp = _exp;
         this.maxExp = _maxExp;
+        this.equipments = _equipments;
     }
 
     public void SetGold(int gold) {
@@ -44,6 +47,12 @@ public class Player
         this.maxExp = maxExp;
     }
 
+    public void SetEquipmentItem(int index, int itemId) {
+        if (index >= 0 && index < 4) {
+            equipments[index] = itemId;
+        }
+    }
+
     public int GetGold() {
         return gold;
     }
@@ -62,6 +71,17 @@ public class Player
 
     public int GetMaxExp() {
         return maxExp;
+    }
+
+    public int[] GetEquipments() {
+        return equipments;
+    }
+
+    public int GetEquipmentItem(int index) {
+        if (index >= 0 && index < 4) {
+            return equipments[index];
+        }
+        return -1; // 잘못된 인덱스일 경우 -1 반환
     }
 }
 

@@ -11,14 +11,17 @@ public class PlayerManager : MonoBehaviour
     public Slider expBar;
     // Start is called before the first frame update
     void Awake() {
-        LoadData();
     }
 
     void Start()
     {
+        LoadData();
         textManager = GetComponent<TextManager>();
         textManager.SetGoldText(player.GetGold());
         UpdateHp();
+        for(int i = 0; i < 4; i++) {
+            textManager.SetEquipmentSprite(i, player.GetEquipmentItem(i));
+        }
     }
 
     // Update is called once per frame
@@ -40,7 +43,9 @@ public class PlayerManager : MonoBehaviour
         string grade = playerData.grade;
         int exp = playerData.exp;
         int maxExp = playerData.maxExp;
+        int[] equipments = playerData.equipments;
 
-        player = new Player(gold, level, grade, exp, maxExp);
+        player = new Player(gold, level, grade, exp, maxExp, equipments);
+        Debug.Log("플레이어 데이터 로드 성공");
     }
 }

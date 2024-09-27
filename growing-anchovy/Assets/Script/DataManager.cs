@@ -9,6 +9,7 @@ public class PlayerData {
     public string grade = "비기너";
     public int exp = 0;
     public int maxExp = 50;
+    public int[] equipments = new int[4] {0, 0, 0, 0};
 }
 
 public class DataManager : MonoBehaviour
@@ -27,14 +28,14 @@ public class DataManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
 
-        path = Application.persistentDataPath + "/";
+        path = Path.Combine(Application.dataPath, "savedata.json");
     }
     public PlayerData playerData = new PlayerData();
 
     // Start is called before the first frame update
     void Start()
     {
-        if(!File.Exists(path + "playerData")) {
+        if(!File.Exists(path)) {
             NewPlayerData();
         } else {
             LoadPlayerData();
@@ -49,12 +50,12 @@ public class DataManager : MonoBehaviour
 
     public void NewPlayerData() {
         string data = JsonUtility.ToJson(playerData);
-        File.WriteAllText(path + "playerData", data);
+        File.WriteAllText(path, data);
         Debug.Log("플레이어 데이터 생성");
     }
 
     public void LoadPlayerData() {
-        string data = File.ReadAllText(path + "playerData");
+        string data = File.ReadAllText(path);
         playerData = JsonUtility.FromJson<PlayerData>(data);
         Debug.Log("플레이어 데이터 로드");
     }
