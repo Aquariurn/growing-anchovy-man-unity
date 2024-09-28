@@ -14,6 +14,7 @@ public class EventManager : MonoBehaviour
     private TextManager textManager;
 
     public Button[] equipmentButtons;
+    public Button[] workoutButtons;
 
     private Player player;
     // Start is called before the first frame update
@@ -28,6 +29,13 @@ public class EventManager : MonoBehaviour
             Debug.Log(index + "번 째 장비 버튼 추가");
         }
         Debug.Log("equipmentButtons 길이: " + equipmentButtons.Length);
+
+        for (int i = 0; i < workoutButtons.Length; i++  ) {
+            int index = i;
+            workoutButtons[i].onClick.AddListener(() => OnWorkoutButtonClick(index));
+            Debug.Log(index + "번 째 운동 버튼 추가");
+        }
+        Debug.Log("workoutButtons 길이: " + workoutButtons.Length);
     }
 
     // Update is called once per frame
@@ -42,6 +50,18 @@ public class EventManager : MonoBehaviour
             Debug.Log(index + "번 째 장비 업그레이드");
             player.SetEquipmentItem(index, player.GetEquipmentItem(index) + 1);
             textManager.SetEquipmentSprite(index, player.GetEquipmentItem(index));
+            textManager.SetGradeText(player.GetGrade());
+        } else {
+            Debug.LogError("player 객체가 null입니다.");
+        }
+    }
+
+    public void OnWorkoutButtonClick(int index) {
+        player = playerManager.player;
+        if(player != null) {
+            Debug.Log(index + "번 째 스탯 업그레이드");
+            player.SetStat(index, player.GetStat(index) + 1);
+            textManager.SetStatsText(player.GetStats());
         } else {
             Debug.LogError("player 객체가 null입니다.");
         }

@@ -17,11 +17,7 @@ public class PlayerManager : MonoBehaviour
     {
         LoadData();
         textManager = GetComponent<TextManager>();
-        textManager.SetGoldText(player.GetGold());
-        UpdateHp();
-        for(int i = 0; i < 4; i++) {
-            textManager.SetEquipmentSprite(i, player.GetEquipmentItem(i));
-        }
+        SetDefaultText();
     }
 
     // Update is called once per frame
@@ -44,8 +40,20 @@ public class PlayerManager : MonoBehaviour
         int exp = playerData.exp;
         int maxExp = playerData.maxExp;
         int[] equipments = playerData.equipments;
+        int[] stats = playerData.stats;
 
-        player = new Player(gold, level, grade, exp, maxExp, equipments);
+        player = new Player(gold, level, grade, exp, maxExp, equipments, stats);
         Debug.Log("플레이어 데이터 로드 성공");
+    }
+
+    private void SetDefaultText() {
+        textManager.SetGoldText(player.GetGold());
+        textManager.SetStatsText(player.GetStats());
+        textManager.SetGradeText(player.GetGrade());
+
+        for(int i = 0; i < 4; i++) {
+            textManager.SetEquipmentSprite(i, player.GetEquipmentItem(i));
+        }
+        UpdateHp();
     }
 }

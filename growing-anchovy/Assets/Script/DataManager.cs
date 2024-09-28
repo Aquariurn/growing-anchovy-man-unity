@@ -6,10 +6,11 @@ using UnityEngine;
 public class PlayerData {
     public int gold = 0;
     public int level = 1;
-    public string grade = "비기너";
+    public string grade = "초보자";
     public int exp = 0;
     public int maxExp = 50;
     public int[] equipments = new int[4] {0, 0, 0, 0};
+    public int[] stats = new int[4] {1, 1, 1, 1};
 }
 
 public class DataManager : MonoBehaviour

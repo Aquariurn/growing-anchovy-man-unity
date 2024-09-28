@@ -10,6 +10,10 @@ public class TextManager : MonoBehaviour
 
     public TMP_Text goldText;
     public TMP_Text expText;
+    public TMP_Text gradeText;
+
+    public TMP_Text[] statsText = new TMP_Text[4];
+    private string[] statsName = new string[4] {"체력", "근력", "민첩성", "유연성"};
 
     public Image[] equipmentImages = new Image[4];
     private Sprite[] itemSprites;
@@ -27,18 +31,28 @@ public class TextManager : MonoBehaviour
     }
 
     public void SetGoldText(int gold) {
-        goldText.text = "Gold : " + gold;
+        goldText.text = "골드 : " + gold;
     }
 
     public void SetExpText(int exp, int maxExp) {
         expText.text = exp + " / " + maxExp;
     }
 
+    public void SetStatsText(int[] stats) {
+        for(int i = 0; i < 4; i++) {
+            statsText[i].text = statsName[i] + " : " + stats[i];
+        }
+    }
+    
     public void SetEquipmentSprite(int index, int itemId) {
         if(itemId < itemSprites.Length) {
             equipmentImages[index].sprite = itemSprites[itemId];
         } else {
             Debug.LogError("Invalid item ID: " + itemId);
         }
+    }
+
+    public void SetGradeText(string grade) {
+        gradeText.text = grade;
     }
 }   

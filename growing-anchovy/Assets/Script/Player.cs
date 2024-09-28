@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player
@@ -13,18 +14,34 @@ public class Player
     private int maxExp;
 
     private int[] equipments;
+    private int[] stats;
 
     public Player() {
         equipments = new int[4];
+        stats = new int[4];
     }
 
-    public Player(int _gold, int _level, string _grade, int _exp, int _maxExp, int[] _equipments) {
+    public Player(int _gold, int _level, string _grade, int _exp, int _maxExp, int[] _equipments, int[] _stats) {
         this.gold = _gold;
         this.level = _level;
         this.grade = _grade;
         this.exp = _exp;
         this.maxExp = _maxExp;
         this.equipments = _equipments;
+        this.stats = _stats;
+    }
+
+    public void UpdateGrade() {
+        int minLevel = equipments.Min();
+        if(minLevel == 0) {
+            grade = "초보자";
+        } else if(minLevel == 1) {
+            grade = "중급자";
+        } else if(minLevel == 2) {
+            grade = "상급자";
+        } else if(minLevel == 3) {
+            grade = "엘리트";
+        }
     }
 
     public void SetGold(int gold) {
@@ -50,6 +67,17 @@ public class Player
     public void SetEquipmentItem(int index, int itemId) {
         if (index >= 0 && index < 4) {
             equipments[index] = itemId;
+            UpdateGrade();
+        }
+    }
+
+    public void SetStats(int[] stats) {
+        this.stats = stats;
+    }
+
+    public void SetStat(int index, int stat) {
+        if (index >= 0 && index < 4) {
+            stats[index] = stat;
         }
     }
 
@@ -80,6 +108,17 @@ public class Player
     public int GetEquipmentItem(int index) {
         if (index >= 0 && index < 4) {
             return equipments[index];
+        }
+        return -1; // 잘못된 인덱스일 경우 -1 반환
+    }
+
+    public int[] GetStats() {
+        return stats;
+    }
+
+    public int GetStat(int index) {
+        if (index >= 0 && index < 4) {
+            return stats[index];
         }
         return -1; // 잘못된 인덱스일 경우 -1 반환
     }
