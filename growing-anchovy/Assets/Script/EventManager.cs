@@ -9,6 +9,7 @@ public class EventManager : MonoBehaviour
     
     public GameObject shopWindow;
     public GameObject workoutWindow;
+    public GameObject[] lockPanel = new GameObject[4];
 
     private PlayerManager playerManager;
     private TextManager textManager;
@@ -48,9 +49,12 @@ public class EventManager : MonoBehaviour
         player = playerManager.player;
         if(player != null) {
             Debug.Log(index + "번 째 장비 업그레이드");
+            player.SetGold(player.GetGold() - 10);
             player.SetEquipmentItem(index, player.GetEquipmentItem(index) + 1);
             textManager.SetEquipmentSprite(index, player.GetEquipmentItem(index));
             textManager.SetGradeText(player.GetGrade());
+            textManager.SetGoldText(player.GetGold());
+            CheckStat();
         } else {
             Debug.LogError("player 객체가 null입니다.");
         }
@@ -60,8 +64,10 @@ public class EventManager : MonoBehaviour
         player = playerManager.player;
         if(player != null) {
             Debug.Log(index + "번 째 스탯 업그레이드");
+            player.SetGold(player.GetGold() - 3);
             player.SetStat(index, player.GetStat(index) + 1);
             textManager.SetStatsText(player.GetStats());
+            textManager.SetGoldText(player.GetGold());
         } else {
             Debug.LogError("player 객체가 null입니다.");
         }
@@ -75,6 +81,7 @@ public class EventManager : MonoBehaviour
 
     public void OnClickShop() {
         shopWindow.SetActive(true);
+        CheckStat();
     }
 
     public void OnClickWorkout() {
@@ -97,5 +104,39 @@ public class EventManager : MonoBehaviour
         textManager.SetExpText(player.GetExp(), player.GetMaxExp());
     }
 
-    
+    private void CheckStat() {
+        player = playerManager.player;
+        for(int i = 0; i < 4; i++) {
+            switch(player.GetEquipmentItem(i)) {
+                case 0:
+                    if(player.GetStat(i) >= 1) {
+                        lockPanel[i].SetActive(false);
+                    } else {
+                        lockPanel[i].SetActive(true);
+                    }
+                    break;
+                case 1:
+                    if(player.GetStat(i) >= 5) {
+                        lockPanel[i].SetActive(false);
+                    } else {
+                        lockPanel[i].SetActive(true);
+                    }
+                    break;
+                case 2:
+                    if(player.GetStat(i) >= 10) {
+                        lockPanel[i].SetActive(false);
+                    } else {
+                        lockPanel[i].SetActive(true);
+                    }   
+                    break;
+                case 3:
+                    if(player.GetStat(i) >= 15) {
+                        lockPanel[i].SetActive(false);
+                    } else {
+                        lockPanel[i].SetActive(true);
+                    }
+                    break;
+            }
+        }
+    }
 }
