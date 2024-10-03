@@ -55,6 +55,7 @@ public class EventManager : MonoBehaviour
             textManager.SetGradeText(player.GetGrade());
             textManager.SetGoldText(player.GetGold());
             CheckStat();
+            CheckEquipment();
         } else {
             Debug.LogError("player 객체가 null입니다.");
         }
@@ -135,6 +136,26 @@ public class EventManager : MonoBehaviour
                     } else {
                         lockPanel[i].SetActive(true);
                     }
+                    break;
+            }
+        }
+    }
+
+    private void CheckEquipment() {
+        player = playerManager.player;
+        for(int i = 0; i < 4; i++) {
+            switch(player.GetEquipmentItem(i)) {
+                case 0:
+                    textManager.SetRequireStatText(i, 1);
+                    break;
+                case 1:
+                    textManager.SetRequireStatText(i, 5);
+                    break;
+                case 2:
+                    textManager.SetRequireStatText(i, 10);
+                    break;
+                case 3:
+                    textManager.SetRequireStatText(i, 15);
                     break;
             }
         }

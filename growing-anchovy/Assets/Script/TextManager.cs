@@ -13,6 +13,7 @@ public class TextManager : MonoBehaviour
     public TMP_Text gradeText;
 
     public TMP_Text[] statsText = new TMP_Text[4];
+    public TMP_Text[] requireStatsText = new TMP_Text[4];
     private string[] statsName = new string[4] {"체력", "근력", "민첩성", "유연성"};
 
     public Image[] equipmentImages = new Image[4];
@@ -54,5 +55,9 @@ public class TextManager : MonoBehaviour
 
     public void SetGradeText(string grade) {
         gradeText.text = grade;
+    }
+
+    public void SetRequireStatText(int index, int requireStat) {
+        requireStatsText[index].text = "요구 : " +statsName[index] + " " + requireStat;
     }
 }   

@@ -53,6 +53,7 @@ public class PlayerManager : MonoBehaviour
 
         for(int i = 0; i < 4; i++) {
             textManager.SetEquipmentSprite(i, player.GetEquipmentItem(i));
+            textManager.SetRequireStatText(i, 1);
         }
         UpdateHp();
     }
