@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class EventManager : MonoBehaviour
 {
     public GameObject playerObject;
+    public GameObject shopObject;
+    public GameObject workoutObject;
     
     public GameObject shopWindow;
     public GameObject workoutWindow;
@@ -13,6 +15,8 @@ public class EventManager : MonoBehaviour
 
     private PlayerManager playerManager;
     private TextManager textManager;
+    private Animator shopAnimator;
+    private Animator workoutAnimator;
 
     public Button[] equipmentButtons;
     public Button[] workoutButtons;
@@ -23,6 +27,8 @@ public class EventManager : MonoBehaviour
     {
         playerManager = playerObject.GetComponent<PlayerManager>();
         textManager = playerObject.GetComponent<TextManager>();
+        shopAnimator = shopObject.GetComponent<Animator>();
+        workoutAnimator = workoutObject.GetComponent<Animator>();
         for (int i = 0; i < equipmentButtons.Length; i++)
         {
             int index = i; // 클로저를 위해 로컬 변수로 복사
@@ -48,14 +54,18 @@ public class EventManager : MonoBehaviour
     public void OnEquipmentButtonClick(int index) {
         player = playerManager.player;
         if(player != null) {
-            Debug.Log(index + "번 째 장비 업그레이드");
-            player.SetGold(player.GetGold() - 10);
-            player.SetEquipmentItem(index, player.GetEquipmentItem(index) + 1);
-            textManager.SetEquipmentSprite(index, player.GetEquipmentItem(index));
-            textManager.SetGradeText(player.GetGrade());
-            textManager.SetGoldText(player.GetGold());
-            CheckStat();
-            CheckEquipment();
+            if(player.GetGold() >= 10) {
+                Debug.Log(index + "번 째 장비 업그레이드");
+                player.SetGold(player.GetGold() - 10);
+                player.SetEquipmentItem(index, player.GetEquipmentItem(index) + 1);
+                textManager.SetEquipmentSprite(index, player.GetEquipmentItem(index));
+                textManager.SetGradeText(player.GetGrade());
+                textManager.SetGoldText(player.GetGold());
+                CheckStat();
+                CheckEquipment();
+            } else {
+                Debug.LogError("골드가 부족합니다.");
+            }
         } else {
             Debug.LogError("player 객체가 null입니다.");
         }
@@ -64,11 +74,15 @@ public class EventManager : MonoBehaviour
     public void OnWorkoutButtonClick(int index) {
         player = playerManager.player;
         if(player != null) {
-            Debug.Log(index + "번 째 스탯 업그레이드");
-            player.SetGold(player.GetGold() - 3);
-            player.SetStat(index, player.GetStat(index) + 1);
-            textManager.SetStatsText(player.GetStats());
-            textManager.SetGoldText(player.GetGold());
+            if(player.GetGold() >= 3) { 
+                Debug.Log(index + "번 째 스탯 업그레이드");
+                player.SetGold(player.GetGold() - 3);
+                player.SetStat(index, player.GetStat(index) + 1);
+                textManager.SetStatsText(player.GetStats());
+                textManager.SetGoldText(player.GetGold());
+            } else {
+                Debug.LogError("골드가 부족합니다.");
+            }
         } else {
             Debug.LogError("player 객체가 null입니다.");
         }
@@ -82,14 +96,29 @@ public class EventManager : MonoBehaviour
 
     public void OnClickShop() {
         shopWindow.SetActive(true);
+        shopAnimator.SetTrigger("Open");
         CheckStat();
     }
 
     public void OnClickWorkout() {
         workoutWindow.SetActive(true);
+        workoutAnimator.SetTrigger("Open");
     }
 
-    public void OnClickExit() {
+    public void OnClickShopExit() {
+        shopAnimator.SetTrigger("Close");
+        StartCoroutine(CloseShopAfterAnimation(shopAnimator));
+    }
+
+    public void OnClickWorkoutExit() {
+        workoutAnimator.SetTrigger("Close");
+        StartCoroutine(CloseShopAfterAnimation(workoutAnimator));
+    }
+
+    private IEnumerator CloseShopAfterAnimation(Animator animator)
+    {
+        // 애니메이션이 완료될 때까지 기다립니다.
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         shopWindow.SetActive(false);
         workoutWindow.SetActive(false);
     }
