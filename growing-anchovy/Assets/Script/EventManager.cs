@@ -15,8 +15,11 @@ public class EventManager : MonoBehaviour
 
     private PlayerManager playerManager;
     private TextManager textManager;
+    private EffectManager effectManager;
     private Animator shopAnimator;
     private Animator workoutAnimator;
+    private Animator shopWindowAnimator;
+    private Animator workoutWindowAnimator;
 
     public Button[] equipmentButtons;
     public Button[] workoutButtons;
@@ -27,19 +30,25 @@ public class EventManager : MonoBehaviour
     {
         playerManager = playerObject.GetComponent<PlayerManager>();
         textManager = playerObject.GetComponent<TextManager>();
+        effectManager = GetComponent<EffectManager>();
         shopAnimator = shopObject.GetComponent<Animator>();
         workoutAnimator = workoutObject.GetComponent<Animator>();
+        shopWindowAnimator = shopWindow.GetComponent<Animator>();
+        workoutWindowAnimator = workoutWindow.GetComponent<Animator>();
+
         for (int i = 0; i < equipmentButtons.Length; i++)
         {
-            int index = i; // 클로저를 위해 로컬 변수로 복사
-            equipmentButtons[i].onClick.AddListener(() => OnEquipmentButtonClick(index));
+            int index = i;
+            Button button = equipmentButtons[i];
+            button.onClick.AddListener(() => OnEquipmentButtonClick(index, button.gameObject));
             Debug.Log(index + "번 째 장비 버튼 추가");
         }
         Debug.Log("equipmentButtons 길이: " + equipmentButtons.Length);
 
-        for (int i = 0; i < workoutButtons.Length; i++  ) {
+        for (int i = 0; i < workoutButtons.Length; i++) {
             int index = i;
-            workoutButtons[i].onClick.AddListener(() => OnWorkoutButtonClick(index));
+            Button button = workoutButtons[i];
+            button.onClick.AddListener(() => OnWorkoutButtonClick(index, button.gameObject));
             Debug.Log(index + "번 째 운동 버튼 추가");
         }
         Debug.Log("workoutButtons 길이: " + workoutButtons.Length);
@@ -51,7 +60,7 @@ public class EventManager : MonoBehaviour
         
     }
 
-    public void OnEquipmentButtonClick(int index) {
+    public void OnEquipmentButtonClick(int index, GameObject buttonObject) {
         player = playerManager.player;
         if(player != null) {
             if(player.GetGold() >= 10) {
@@ -63,6 +72,8 @@ public class EventManager : MonoBehaviour
                 textManager.SetGoldText(player.GetGold());
                 CheckStat();
                 CheckEquipment();
+                effectManager.BuyEffect(buttonObject);
+                playerManager.SaveData();
             } else {
                 Debug.LogError("골드가 부족합니다.");
             }
@@ -71,7 +82,7 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public void OnWorkoutButtonClick(int index) {
+    public void OnWorkoutButtonClick(int index, GameObject buttonObject) {
         player = playerManager.player;
         if(player != null) {
             if(player.GetGold() >= 3) { 
@@ -80,6 +91,8 @@ public class EventManager : MonoBehaviour
                 player.SetStat(index, player.GetStat(index) + 1);
                 textManager.SetStatsText(player.GetStats());
                 textManager.SetGoldText(player.GetGold());
+                effectManager.BuyEffect(buttonObject);
+                playerManager.SaveData();
             } else {
                 Debug.LogError("골드가 부족합니다.");
             }
@@ -88,29 +101,28 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public void OnClickGold() {
-        player = playerManager.player;
-        player.SetGold(player.GetGold() + 10);
-        textManager.SetGoldText(player.GetGold());
-    }
-
     public void OnClickShop() {
-        shopWindow.SetActive(true);
-        shopAnimator.SetTrigger("Open");
         CheckStat();
+        CheckEquipment();
+        shopWindow.SetActive(true);
+        shopWindowAnimator.SetTrigger("Open");
+        shopAnimator.SetTrigger("Open");
     }
 
     public void OnClickWorkout() {
         workoutWindow.SetActive(true);
+        workoutWindowAnimator.SetTrigger("Open");
         workoutAnimator.SetTrigger("Open");
     }
 
     public void OnClickShopExit() {
+        shopWindowAnimator.SetTrigger("Close");
         shopAnimator.SetTrigger("Close");
         StartCoroutine(CloseShopAfterAnimation(shopAnimator));
     }
 
     public void OnClickWorkoutExit() {
+        workoutWindowAnimator.SetTrigger("Close");
         workoutAnimator.SetTrigger("Close");
         StartCoroutine(CloseShopAfterAnimation(workoutAnimator));
     }
@@ -121,17 +133,6 @@ public class EventManager : MonoBehaviour
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         shopWindow.SetActive(false);
         workoutWindow.SetActive(false);
-    }
-
-    public void OnClickExp() {
-        player = playerManager.player;
-        player.SetExp(player.GetExp() + 10);
-        if(player.GetExp() + 10 >= player.GetMaxExp()) {
-            player.SetMaxExp(player.GetMaxExp() * 2);
-            player.SetExp(player.GetExp() - player.GetExp());
-        }
-        playerManager.UpdateHp();
-        textManager.SetExpText(player.GetExp(), player.GetMaxExp());
     }
 
     private void CheckStat() {

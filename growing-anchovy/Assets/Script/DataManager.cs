@@ -37,7 +37,7 @@ public class DataManager : MonoBehaviour
     void Start()
     {
         if(!File.Exists(path)) {
-            NewPlayerData();
+            SavePlayerData();
         } else {
             LoadPlayerData();
         }
@@ -49,10 +49,10 @@ public class DataManager : MonoBehaviour
         
     }
 
-    public void NewPlayerData() {
+    public void SavePlayerData() {
         string data = JsonUtility.ToJson(playerData);
         File.WriteAllText(path, data);
-        Debug.Log("플레이어 데이터 생성");
+        Debug.Log("플레이어 데이터 저장");
     }
 
     public void LoadPlayerData() {

@@ -46,6 +46,21 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("플레이어 데이터 로드 성공");
     }
 
+    public void SaveData() {
+        PlayerData playerData = new PlayerData();
+
+        playerData.gold = player.GetGold();
+        playerData.level = player.GetLevel();
+        playerData.grade = player.GetGrade();
+        playerData.exp = player.GetExp();
+        playerData.maxExp = player.GetMaxExp();
+        playerData.equipments = player.GetEquipments();
+        playerData.stats = player.GetStats();
+
+        DataManager.Instance.playerData = playerData;
+        DataManager.Instance.SavePlayerData();
+    }
+
     private void SetDefaultText() {
         textManager.SetGoldText(player.GetGold());
         textManager.SetStatsText(player.GetStats());

@@ -22,7 +22,7 @@ public class TextManager : MonoBehaviour
     void Start()
     {
         playerManager = GetComponent<PlayerManager>();
-        itemSprites = Resources.LoadAll<Sprite>("Equipment");
+        itemSprites = Resources.LoadAll<Sprite>("Sprite/Equipment/number set");
     }
 
     // Update is called once per frame
@@ -32,7 +32,7 @@ public class TextManager : MonoBehaviour
     }
 
     public void SetGoldText(int gold) {
-        goldText.text = "골드 : " + gold;
+        goldText.text = gold.ToString();
     }
 
     public void SetExpText(int exp, int maxExp) {
@@ -41,7 +41,7 @@ public class TextManager : MonoBehaviour
 
     public void SetStatsText(int[] stats) {
         for(int i = 0; i < 4; i++) {
-            statsText[i].text = statsName[i] + " : " + stats[i];
+            statsText[i].text = stats[i].ToString();
         }
     }
     
