@@ -35,12 +35,16 @@ public class Player
         int minLevel = equipments.Min();
         if(minLevel == 0) {
             grade = "초보자";
+            level = 1;
         } else if(minLevel == 1) {
             grade = "중급자";
+            level = 2;
         } else if(minLevel == 2) {
             grade = "상급자";
+            level = 3;
         } else if(minLevel == 3) {
             grade = "엘리트";
+            level = 4;
         }
     }
 

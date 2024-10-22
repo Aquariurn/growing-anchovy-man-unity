@@ -7,6 +7,8 @@ public class Particle : MonoBehaviour
     
     public float initialSpeed;
     public float colorSpeed;
+
+    private float lifetime;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,7 +19,8 @@ public class Particle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(direction * initialSpeed);
+        lifetime += Time.deltaTime;
+        transform.Translate(direction * initialSpeed * (1 / lifetime));
         Color color = spriteRenderer.color;
         color.a = Mathf.Lerp(spriteRenderer.color.a, 0, Time.deltaTime * colorSpeed);
         spriteRenderer.color = color;

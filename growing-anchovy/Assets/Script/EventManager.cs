@@ -16,6 +16,7 @@ public class EventManager : MonoBehaviour
     private PlayerManager playerManager;
     private TextManager textManager;
     private EffectManager effectManager;
+    private PlayerAnimator playerAnimator;
     private Animator shopAnimator;
     private Animator workoutAnimator;
     private Animator shopWindowAnimator;
@@ -30,6 +31,7 @@ public class EventManager : MonoBehaviour
     {
         playerManager = playerObject.GetComponent<PlayerManager>();
         textManager = playerObject.GetComponent<TextManager>();
+        playerAnimator = playerObject.GetComponent<PlayerAnimator>();
         effectManager = GetComponent<EffectManager>();
         shopAnimator = shopObject.GetComponent<Animator>();
         workoutAnimator = workoutObject.GetComponent<Animator>();
@@ -67,6 +69,7 @@ public class EventManager : MonoBehaviour
                 Debug.Log(index + "번 째 장비 업그레이드");
                 player.SetGold(player.GetGold() - 10);
                 player.SetEquipmentItem(index, player.GetEquipmentItem(index) + 1);
+                playerAnimator.LevelUp();
                 textManager.SetEquipmentSprite(index, player.GetEquipmentItem(index));
                 textManager.SetGradeText(player.GetGrade());
                 textManager.SetGoldText(player.GetGold());
@@ -111,6 +114,8 @@ public class EventManager : MonoBehaviour
 
     public void OnClickWorkout() {
         workoutWindow.SetActive(true);
+        playerManager.player.SetGold(playerManager.player.GetGold() + 10);
+        textManager.SetGoldText(playerManager.player.GetGold());
         workoutWindowAnimator.SetTrigger("Open");
         workoutAnimator.SetTrigger("Open");
     }
@@ -140,28 +145,28 @@ public class EventManager : MonoBehaviour
         for(int i = 0; i < 4; i++) {
             switch(player.GetEquipmentItem(i)) {
                 case 0:
-                    if(player.GetStat(i) >= 1) {
+                    if(player.GetStat(i) >= 3) {
                         lockPanel[i].SetActive(false);
                     } else {
                         lockPanel[i].SetActive(true);
                     }
                     break;
                 case 1:
-                    if(player.GetStat(i) >= 5) {
+                    if(player.GetStat(i) >= 7) {
                         lockPanel[i].SetActive(false);
                     } else {
                         lockPanel[i].SetActive(true);
                     }
                     break;
                 case 2:
-                    if(player.GetStat(i) >= 10) {
+                    if(player.GetStat(i) >= 15) {
                         lockPanel[i].SetActive(false);
                     } else {
                         lockPanel[i].SetActive(true);
                     }   
                     break;
                 case 3:
-                    if(player.GetStat(i) >= 15) {
+                    if(player.GetStat(i) >= 25) {
                         lockPanel[i].SetActive(false);
                     } else {
                         lockPanel[i].SetActive(true);
@@ -176,16 +181,16 @@ public class EventManager : MonoBehaviour
         for(int i = 0; i < 4; i++) {
             switch(player.GetEquipmentItem(i)) {
                 case 0:
-                    textManager.SetRequireStatText(i, 1);
+                    textManager.SetRequireStatText(i, 3);
                     break;
                 case 1:
-                    textManager.SetRequireStatText(i, 5);
+                    textManager.SetRequireStatText(i, 7);
                     break;
                 case 2:
-                    textManager.SetRequireStatText(i, 10);
+                    textManager.SetRequireStatText(i, 15);
                     break;
                 case 3:
-                    textManager.SetRequireStatText(i, 15);
+                    textManager.SetRequireStatText(i, 25);
                     break;
             }
         }

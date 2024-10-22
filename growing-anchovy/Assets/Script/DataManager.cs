@@ -15,12 +15,12 @@ public class PlayerData {
 
 public class DataManager : MonoBehaviour
 {
-
     public static DataManager Instance;
     
     string path;
     string filename = "save";
-
+    public PlayerData playerData = new PlayerData();
+    
     private void Awake() {
         if (Instance == null) {
             Instance = this;
@@ -29,18 +29,21 @@ public class DataManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
 
-        path = Path.Combine(Application.dataPath, "savedata.json");
-    }
-    public PlayerData playerData = new PlayerData();
+        path = Application.persistentDataPath + "/saveData.json";
+        print(path);
 
-    // Start is called before the first frame update
-    void Start()
-    {
         if(!File.Exists(path)) {
             SavePlayerData();
         } else {
             LoadPlayerData();
         }
+    }
+    
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -51,12 +54,17 @@ public class DataManager : MonoBehaviour
 
     public void SavePlayerData() {
         string data = JsonUtility.ToJson(playerData);
-        File.WriteAllText(path, data);
+        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(data);
+        string code = System.Convert.ToBase64String(bytes);
+        print(code);
+        File.WriteAllText(path, code);
         Debug.Log("플레이어 데이터 저장");
     }
 
     public void LoadPlayerData() {
-        string data = File.ReadAllText(path);
+        string code = File.ReadAllText(path);
+        byte[] bytes = System.Convert.FromBase64String(code);
+        string data = System.Text.Encoding.UTF8.GetString(bytes);
         playerData = JsonUtility.FromJson<PlayerData>(data);
         Debug.Log("플레이어 데이터 로드");
     }

@@ -7,15 +7,17 @@ public class PlayerManager : MonoBehaviour
 {
     public Player player;
     private TextManager textManager;
+    private PlayerAnimator playerAnimator;
 
-    public Slider expBar;
     // Start is called before the first frame update
     void Awake() {
     }
 
     void Start()
     {
+        playerAnimator = GetComponent<PlayerAnimator>();
         LoadData();
+        playerAnimator.LevelUp();
         textManager = GetComponent<TextManager>();
         SetDefaultText();
     }
@@ -24,11 +26,6 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void UpdateHp() {
-        expBar.maxValue = player.GetMaxExp();
-        expBar.value = player.GetExp();
     }
 
     public void LoadData() {
@@ -70,6 +67,5 @@ public class PlayerManager : MonoBehaviour
             textManager.SetEquipmentSprite(i, player.GetEquipmentItem(i));
             textManager.SetRequireStatText(i, 1);
         }
-        UpdateHp();
     }
 }
