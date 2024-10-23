@@ -18,7 +18,6 @@ public class DataManager : MonoBehaviour
     public static DataManager Instance;
     
     string path;
-    string filename = "save";
     public PlayerData playerData = new PlayerData();
     
     private void Awake() {
